@@ -7,7 +7,7 @@ export TERMINAL="gnome-terminal"
 export BROWSER="firefox"
 export READER="zathura"
 export FILE="vifm"
-export EDITOR="emacsclient -n -c"
+export EDITOR="emacsclient"
 # less/man colors
 export LESS=-R
 export LESS_TERMCAP_mb="$(printf '%b' '[1;31m')"; a="${a%_}"
