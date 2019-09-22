@@ -1,0 +1,15 @@
+# Basic binds
+F5
+	$TERMINAL
+F4
+	$BROWSER
+F7
+	$EDITOR
+F8
+	$TERMIAL -e $FILE
+{button7,button6}
+  pactl set-sink-volume @DEFAULT_SINK@ {-2%, +2%}
+super + {minus, equal}
+  pactl set-sink-volume @DEFAULT_SINK@ {-2%, +2%}
+super + r
+  rofi -show run
