@@ -24,7 +24,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from libqtile.config import Key, Screen, Group, Drag, Click
+from libqtile.config import Key, Screen, Group, Drag, Click, ScratchPad, DropDown
 from libqtile.command import lazy
 from libqtile import layout, bar, widget, hook
 from settings import MOD, COLS, FONT_PARAMS
@@ -74,7 +74,9 @@ def init_keys():
         Key([mod], "q", lazy.window.kill()),
         Key([mod, "control"], "r", lazy.restart()),
         Key([mod, "control"], "q", lazy.shutdown()),
-        #Key([mod], "r", lazy.spawncmd()),
+        Key([mod], "t", lazy.screen.toggle_group()),
+        Key([mod, "mod1"], "t", lazy.screen.toscreen(1)),
+        # Key([mod], "r", lazy.spawncmd()),
     ]
     return keys
 
@@ -252,19 +254,21 @@ def init_widgets():
     ]
     return widgets_list
 
+
 def init_group_names():
-    return [("DEV", {'layout': 'monadtall'}),
-            ("WWW", {'layout': 'monadtall'}),
-            ("SYS", {'layout': 'monadtall'}),
-            ("VBOX", {'layout': 'monadtall'}),
-            ("MEDIA", {'layout': 'monadtall'}),
-            ("GFX", {'layout': 'monadtall'})]
+    return [
+        ("DEV", {"layout": "monadtall"}),
+        ("WWW", {"layout": "monadtall"}),
+        ("SYS", {"layout": "monadtall"}),
+        ("VBOX", {"layout": "monadtall"}),
+        ("MEDIA", {"layout": "monadtall"}),
+        ("GFX", {"layout": "monadtall"}),
+    ]
+
 
 # DWSVMG is out of the picture for key binding
 def init_groups():
     return [Group(name, **kwargs) for name, kwargs in group_names]
-
-
 
 
 # Drag floating layouts.
@@ -326,20 +330,44 @@ def autostart():
 
 
 keys = init_keys()
-screens = [Screen(top=bar.Bar(widgets=init_widgets(), opacity=0.95, size=20))]
+screens = [
+    Screen(top=bar.Bar(widgets=init_widgets(), opacity=0.95, size=20)),
+    Screen(top=bar.Bar(widgets=init_widgets(), opacity=0.95, size=20)),
+]
 layouts = init_layouts()
 group_names = init_group_names()
 groups = init_groups()
 
+groups.extend(
+    [
+        ScratchPad(
+            "scratchpad",
+            [
+                DropDown("terminal", "gnome-terminal", opacity=0.8),
+                DropDown("spotify", "spotify", opacity=0.9, x=0.05, y=0.2, height=0.7),
+            ],
+        ),
+        Group("DEV"),
+    ]
+)
+
+keys.extend(
+    [
+        # toggle visibiliy of above defined DropDown named "term"
+        Key([], "F10", lazy.group["scratchpad"].dropdown_toggle("terminal")),
+        Key([], "F12", lazy.group["scratchpad"].dropdown_toggle("spotify")),
+    ]
+)
+
 for i in groups:
-   keys.extend(
-       [
-           # mod1 + letter of group = switch to group
-          Key([mod], i.name[0].lower(), lazy.group[i.name].toscreen()),
-           # mod1 + shift + letter of group = switch to & move focused window to group
-           Key([mod, "shift"], i.name[0].lower(), lazy.window.togroup(i.name)),
-       ]
-   )
+    keys.extend(
+        [
+            # mod1 + letter of group = switch to group
+            Key([mod], i.name[0].lower(), lazy.group[i.name].toscreen()),
+            # mod1 + shift + letter of group = switch to & move focused window to group
+            Key([mod, "shift"], i.name[0].lower(), lazy.window.togroup(i.name)),
+        ]
+    )
 
 
 #   groups = [Group(i) for i in "123456789"]
@@ -354,5 +382,3 @@ for i in groups:
 #               Key([mod, "shift"], i.name, lazy.window.togroup(i.name)),
 #           ]
 #       )
-
-
