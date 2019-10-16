@@ -44,6 +44,20 @@ MARGIN = 12
 # Define key bindin
 
 
+@lazy.function
+def window_to_prev_group(qtile):
+    if qtile.currentWindow is not None:
+        i = qtile.groups.index(qtile.currentGroup)
+        qtile.currentWindow.togroup(qtile.groups[i - 1].name)
+
+
+@lazy.function
+def window_to_next_group(qtile):
+    if qtile.currentWindow is not None:
+        i = qtile.groups.index(qtile.currentGroup)
+        qtile.currentWindow.togroup(qtile.groups[i + 1].name)
+
+
 def init_keys():
     keys = [
         # Switch between windows in current stack pane
@@ -60,13 +74,13 @@ def init_keys():
         # Grow and shink the windows
         Key([mod, "mod1"], "u", lazy.layout.grow()),
         Key([mod, "mod1"], "e", lazy.layout.shrink()),
+        Key([mod, "shift"], "Return", lazy.window.toggle_floating()),  # Toggle floating
         # Switch window focus to other pane(s) of stack
+        Key([mod], "p", lazy.to_screen(0)),  # Keyboard focus screen(1)
+        Key([mod], "f", lazy.to_screen(1)),  # Keyboard focus screen(2)
         Key([mod], "space", lazy.layout.next()),
         # Swap panes of split stack
         Key([mod, "shift"], "space", lazy.layout.rotate()),
-        # Toggle between split and unsplit sides of stack.
-        # Split = all windows displayed
-        # Unsplit = 1 window displayed, like Max layout, but still with
         # multiple stack panes
         Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
         # Toggle between different layouts as defined below

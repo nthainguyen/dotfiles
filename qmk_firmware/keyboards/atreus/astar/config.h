@@ -28,11 +28,11 @@
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
 */
-#if defined(PCBDOWN) //pcbdown basically mean navy box keyboard
+/* #if defined(PCBDOWN) //pcbdown basically mean navy box keyboard */
   #define MATRIX_ROW_PINS { B4, B5, B3, B2}
-#else
-  #define MATRIX_ROW_PINS { B2, B6, E6, B4}
-#endif
+/* #else */
+  /* #define MATRIX_ROW_PINS { B2, B6, E6, B4} */
+/* #endif */
 
 #define MATRIX_COL_PINS { F7, B1, F4, F5, F6, E6, D4, D0, D1, D7, C6}
 
